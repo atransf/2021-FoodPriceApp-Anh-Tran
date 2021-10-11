@@ -10,11 +10,20 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var foodOrderTextField: UITextField!
     @IBOutlet weak var itemsPriceTotal: UITextView!
+    @IBOutlet weak var foodImageView: UIImageView!
     
-    let dishNames = ["pizza","salad","burger","pasta"]
-    let dishPrice: [Double] = [19.99,14.99,15.99,18.99]
+    struct FoodDish {
+        var foodIndex: Int
+        var name: String
+        var price: Double
+        var imageName: String
+    }
     
-    var orderList: [Int] = []
+    let foodMenu = [FoodDish(foodIndex: 0, name: "Pizza", price: 19.99, imageName: "pizza"),
+                    FoodDish(foodIndex: 1, name: "Burger", price: 15.99, imageName: "hamburger"),
+                    FoodDish(foodIndex: 2, name: "Salad", price: 12.99, imageName: "salad"),
+                    FoodDish(foodIndex: 3, name: "Pasta", price: 17.99, imageName: "pasta")]
+    var orderList: [FoodDish]  = []
    
     
     override func viewDidLoad() {
@@ -26,18 +35,20 @@ class ViewController: UIViewController {
         var totalAmount = 0.0
         var receipt = ""
         let myDishOrder = foodOrderTextField.text!
-        for index in 0 ..< dishNames.count {
-                if myDishOrder == dishNames[index] {
-//                    itemsPriceTotal.text = "\(myDishOrder): $\(dishPrice[index])"
-                    orderList.append(index)
-                }
+        
+        for item in foodMenu {
+            if myDishOrder == item.name || myDishOrder == item.name.lowercased() {
+                orderList.append(foodMenu[item.foodIndex])
+                foodImageView.image = UIImage(named: "\(item.imageName)")
+            }
         }
-        for index in orderList {
-                totalAmount += dishPrice[index]
-                receipt += "\n\(dishNames[index]): $\(dishPrice[index])"
+                
+        for order in orderList{
+            totalAmount += order.price
+            receipt += "\n\(order.name) price is: $\(order.price)"
         }
         
-        receipt += "\nTotal Amount: $\(totalAmount)"
+        receipt += "\n\nTotal Amount: $\(totalAmount)"
         itemsPriceTotal.text = receipt
         
     }
